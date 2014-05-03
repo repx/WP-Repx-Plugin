@@ -2,11 +2,11 @@
 /**
  * Plugin Name.
  *
- * @package   Plugin_Name_Admin
- * @author    Your Name <email@example.com>
- * @license   GPL-2.0+
+ * @package   WP_Repx_Widgets_Admin
+ * @author    Steven Nance <steven@devtrw.com>
+ * @license   MIT
  * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @copyright 2014 Steven Nance <steven@devtrw.com>
  */
 
 /**
@@ -14,14 +14,12 @@
  * administrative side of the WordPress site.
  *
  * If you're interested in introducing public-facing
- * functionality, then refer to `class-plugin-name.php`
+ * functionality, then refer to `class-wp-repx-widgets.php`
  *
- * @TODO: Rename this class to a proper name for your plugin.
- *
- * @package Plugin_Name_Admin
- * @author  Your Name <email@example.com>
+ * @package WP_Repx_Widgets_Admin
+ * @author  Steven Nance <steven@devtrw.com>
  */
-class Plugin_Name_Admin {
+class WP_Repx_Widgets_Admin {
 
 	/**
 	 * Instance of this class.
@@ -49,29 +47,15 @@ class Plugin_Name_Admin {
 	 */
 	private function __construct() {
 
-		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
-		/*
-		 * Call $plugin_slug from public plugin class.
-		 *
-		 * @TODO:
-		 *
-		 * - Rename "Plugin_Name" to the name of your initial plugin class
-		 *
-		 */
-		$plugin = Plugin_Name::get_instance();
+		$plugin = WP_Repx_Widgets::get_instance();
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+
+		// Add settings for the widgets
+		add_action( 'admin_init', array( $this, 'add_plugin_settings' ) );
 
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
@@ -91,6 +75,11 @@ class Plugin_Name_Admin {
 
 	}
 
+	public function add_plugin_settings()
+	{
+		add_settings_section();
+	}
+
 	/**
 	 * Return an instance of this class.
 	 *
@@ -99,15 +88,6 @@ class Plugin_Name_Admin {
 	 * @return    object    A single instance of this class.
 	 */
 	public static function get_instance() {
-
-		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
 
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
@@ -119,10 +99,6 @@ class Plugin_Name_Admin {
 
 	/**
 	 * Register and enqueue admin-specific style sheet.
-	 *
-	 * @TODO:
-	 *
-	 * - Rename "Plugin_Name" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -136,17 +112,13 @@ class Plugin_Name_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Plugin_Name::VERSION );
+			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), WP_Repx_Widgets::VERSION );
 		}
 
 	}
 
 	/**
 	 * Register and enqueue admin-specific JavaScript.
-	 *
-	 * @TODO:
-	 *
-	 * - Rename "Plugin_Name" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -160,7 +132,7 @@ class Plugin_Name_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Plugin_Name::VERSION );
+			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), WP_Repx_Widgets::VERSION );
 		}
 
 	}
@@ -178,17 +150,10 @@ class Plugin_Name_Admin {
 		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
 		 *
 		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
-		 *
-		 * @TODO:
-		 *
-		 * - Change 'Page Title' to the title of your plugin admin page
-		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
-		 * - Change 'manage_options' to the capability you see fit
-		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
 		 */
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Page Title', $this->plugin_slug ),
-			__( 'Menu Text', $this->plugin_slug ),
+			__( 'RepX Widget Settings', $this->plugin_slug ),
+			__( 'RepX Widgets', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )

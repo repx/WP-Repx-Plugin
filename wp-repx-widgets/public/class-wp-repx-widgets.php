@@ -2,11 +2,11 @@
 /**
  * Plugin Name.
  *
- * @package   Plugin_Name
- * @author    Your Name <email@example.com>
- * @license   GPL-2.0+
+ * @package   WP_Repx_Widgets
+ * @author    Steven Nance <steven@devtrw.com>
+ * @license   MIT
  * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @copyright 2014 Steven Nance <steven@devtrw.com>
  */
 
 /**
@@ -14,14 +14,12 @@
  * public-facing side of the WordPress site.
  *
  * If you're interested in introducing administrative or dashboard
- * functionality, then refer to `class-plugin-name-admin.php`
+ * functionality, then refer to `class-wp-repx-widgets-admin.php`
  *
- * @TODO: Rename this class to a proper name for your plugin.
- *
- * @package Plugin_Name
- * @author  Your Name <email@example.com>
+ * @package WP_Repx_Widgets
+ * @author  Steven Nance <steven@devtrw.com>
  */
-class Plugin_Name {
+class WP_Repx_Widgets {
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -33,8 +31,6 @@ class Plugin_Name {
 	const VERSION = '1.0.0';
 
 	/**
-	 * @TODO - Rename "plugin-name" to the name of your plugin
-	 *
 	 * Unique identifier for your plugin.
 	 *
 	 *
@@ -46,7 +42,7 @@ class Plugin_Name {
 	 *
 	 * @var      string
 	 */
-	protected $plugin_slug = 'plugin-name';
+	protected $plugin_slug = 'wp-repx-widgets';
 
 	/**
 	 * Instance of this class.
@@ -78,8 +74,8 @@ class Plugin_Name {
 		/* Define custom functionality.
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		//add_action( '@TODO', array( $this, 'action_method_name' ) );
+		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 
 	}
 
@@ -267,7 +263,7 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+		//wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
 	}
 
 	/**
@@ -276,7 +272,18 @@ class Plugin_Name {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		//wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
+		wp_enqueue_script(
+			$this->plugin_slug . '-bootstrap-widgets',
+			$this->get_bootstrap_script(),
+			array( ),
+			null
+		);
+	}
+
+	public function get_bootstrap_script()
+	{
+		return 'https://demo.repx.me/widgets.js';
 	}
 
 	/**
