@@ -273,17 +273,30 @@ class WP_Repx_Widgets {
 	 */
 	public function enqueue_scripts() {
 		//wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION );
-		wp_enqueue_script(
-			$this->plugin_slug . '-bootstrap-widgets',
-			$this->get_bootstrap_script(),
-			array( ),
-			null
-		);
+
+		$bootstrap_script = $this->get_bootstrap_script_url();
+		if ( false !== $bootstrap_script ) {
+			wp_enqueue_script(
+				$this->plugin_slug . '-bootstrap-widgets',
+				$bootstrap_script,
+				array( ),
+				null
+			);
+		}
 	}
 
-	public function get_bootstrap_script()
+	/**
+	 * Get the widget bootstrap url.
+	 *
+	 * @return bool|string false when api_client_id is unset.
+	 */
+	public function get_bootstrap_script_url()
 	{
-		return 'https://demo.repx.me/widgets.js';
+		$api_client_id = get_option( 'repx_widgets_api_client_id' );
+		if ( empty($api_client_id) ) {
+			return false;
+		}
+		return sprintf('https://%s.repx.me/widgets.js', $api_client_id);
 	}
 
 	/**

@@ -17,6 +17,13 @@
 
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
+	<form method="POST" action="options.php">
+		<?php
+			settings_fields( 'wp-repx-widgets' );
+			do_settings_sections( 'wp-repx-widgets' );
+			submit_button();
+		?>
+	</form>
 	<!-- @TODO: Provide markup for your options page here. -->
 
 </div>

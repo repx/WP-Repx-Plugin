@@ -51,8 +51,8 @@ class WP_Repx_Widgets_Admin {
 		$this->plugin_slug = $plugin->get_plugin_slug();
 
 		// Load admin style sheet and JavaScript.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add settings for the widgets
 		add_action( 'admin_init', array( $this, 'add_plugin_settings' ) );
@@ -70,14 +70,65 @@ class WP_Repx_Widgets_Admin {
 		 * Read more about actions and filters:
 		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
-		add_action( '@TODO', array( $this, 'action_method_name' ) );
-		add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+		//add_action( '@TODO', array( $this, 'action_method_name' ) );
+		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 
 	}
 
 	public function add_plugin_settings()
 	{
-		add_settings_section();
+		;
+		// Create a configuration section for the API settings
+		add_settings_section(
+			'repx_widgets_api_section',
+			'API Configuration',
+			array( $this, 'api_setting_section_callback' ),
+			$this->plugin_slug
+		);
+
+		// Add the ClientID option to the new API Configuration section
+		add_settings_field(
+			'repx_widgets_api_client_id',
+			'Client ID',
+			array( $this, 'api_client_id_setting_callback' ),
+			$this->plugin_slug,
+			'repx_widgets_api_section'
+		);
+
+		// Register our setting so that $_POST handling is done for us and
+		// our callback function just has to echo the <input>
+		register_setting( $this->plugin_slug, 'repx_widgets_api_client_id' );
+	}
+
+	/**
+	 * This function is run at the start of the api section.
+	 */
+	public function api_setting_section_callback()
+	{
+		printf(
+			'<p>%s</p>',
+			__( 'Api settings be below!', $this->plugin_slug )
+		);
+	}
+
+	public function api_client_id_setting_callback()
+	{
+		$option_name = 'repx_widgets_api_client_id';
+		$attributes = array(
+			'class'       => 'small-text',
+			'id'          => $option_name,
+			'name'        => $option_name,
+			'placeholder' => 'Subdomain',
+			'type'        => 'text',
+			'value'       => get_option( $option_name ),
+		);
+
+		$attributeString = '';
+		foreach($attributes as $property => $value) {
+			$attributeString .= sprintf(' %s="%s"', $property, $value);
+		}
+
+		printf('https://<input%s>.repx.me/widgets.js', $attributeString);
 	}
 
 	/**
